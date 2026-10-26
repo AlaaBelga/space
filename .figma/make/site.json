@@ -1,0 +1,11 @@
+{
+  "title": "Alaa Belga Building",
+  "description": "An engaging website experience designed to make browsing and scrolling more enjoyable with appealing content and smooth navigation.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
