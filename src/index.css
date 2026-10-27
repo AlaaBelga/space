@@ -1404,14 +1404,18 @@ h1 em { font-style:normal; margin-left:.24em; }
 .elevator nav a.active { color:var(--acc); transform:scale(1.25); }
 
 @media (max-width: 760px) {
-  .city,
-  .day-mode.city {
-    background-attachment:scroll;
+  .city {
+    background:
+      linear-gradient(180deg, #1a3038 0%, #101a1e 48%, #0d1518 100%);
+    background-attachment: scroll;
   }
+  .day-mode.city {
+    background:
+      linear-gradient(180deg, #b9dbe8 0%, #8fbecb 48%, #6f9eaa 100%);
+  }
+  .city::after,
   .day-mode.city::after {
-    position:fixed;
-    transform:translateZ(0);
-    will-change:transform;
+    display: none;
   }
   .atmosphere {
     backdrop-filter:none;
