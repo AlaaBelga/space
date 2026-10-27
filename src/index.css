@@ -1409,9 +1409,9 @@ h1 em { font-style:normal; margin-left:.24em; }
     background-attachment:scroll;
   }
   .day-mode.city::after {
-    position:absolute;
-    transform:none;
-    will-change:auto;
+    position:fixed;
+    transform:translateZ(0);
+    will-change:transform;
   }
   .atmosphere {
     backdrop-filter:none;
