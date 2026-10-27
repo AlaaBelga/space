@@ -132,7 +132,9 @@ const FLY_MS = 900
 export default function App() {
   const [language, setLanguage] = useState<Language>('en')
   const t = getCopy(language)
-  const isMobileViewport = typeof window !== 'undefined' && window.matchMedia('(max-width: 760px)').matches
+  const [isMobileViewport, setIsMobileViewport] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 760px)').matches,
+  )
   const [active, setActive] = useState('roof')
   const [progress, setProgress] = useState(0)
   const [zoomRoomId, setZoomRoomId] = useState<string | null>(null) // camera is flying to this room
@@ -153,6 +155,15 @@ export default function App() {
   const [litRooms, setLitRooms] = useState<Record<string, boolean>>({})
   const [roofVideoReady, setRoofVideoReady] = useState(false)
   const [isDayMode, setIsDayMode] = useState(false)
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 760px)')
+    const updateViewport = () => setIsMobileViewport(media.matches)
+    media.addEventListener('change', updateViewport)
+    return () => media.removeEventListener('change', updateViewport)
+  }, [])
+  useEffect(() => {
+    if (isMobileViewport) setRoofVideoReady(false)
+  }, [isMobileViewport])
   useEffect(() => {
     document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute(
       'content',
@@ -476,7 +487,7 @@ export default function App() {
             )}
             <div className="lobby-video-overlay" aria-hidden="true" />
             <p>{t.openDoors}</p>
-            <h2>{language === 'fr' ? t.build : <>{t.build}<br /><em>{t.something}</em></>}</h2>
+            <h2>{t.build}<br /><em>{t.something}</em></h2>
             <div className="lobby-links">
               <a href="mailto:alaabelga@gmail.com">EMAIL <span>↗</span></a>
               <a href="https://github.com/AlaaBelga">GITHUB <span>↗</span></a>
