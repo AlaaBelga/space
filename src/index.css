@@ -1371,6 +1371,9 @@ h1 em { font-style:normal; margin-left:.24em; }
   .day-mode.city {
     background-attachment:scroll;
   }
+  .atmosphere {
+    backdrop-filter:none;
+  }
   .city { padding:8vh 7vw 6vh; }
   .building { width:88vw; }
   .building::before { right:-18px; width:18px; }
