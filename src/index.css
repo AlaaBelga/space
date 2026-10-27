@@ -56,23 +56,34 @@
 }
 .day-mode.city {
   background:
-    radial-gradient(ellipse at 18% 18%,rgba(255,255,255,.68) 0 7%,transparent 25%),
-    radial-gradient(ellipse at 82% 34%,rgba(255,255,255,.38) 0 5%,transparent 23%),
-    linear-gradient(180deg,rgba(221,246,255,.52),rgba(116,176,194,.5)),
-    url('https://images.unsplash.com/photo-1532888277436-2286814f0ee1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=85&w=1800') center top / cover fixed;
+    radial-gradient(ellipse at 22% 16%,rgba(255,255,255,.58) 0 8%,transparent 28%),
+    linear-gradient(180deg,rgba(221,246,255,.48),rgba(116,176,194,.44)),
+    #8db9c5;
+}
+.day-mode.city::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: url('https://images.unsplash.com/photo-1532888277436-2286814f0ee1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=85&w=1800') center top / cover no-repeat;
+  transform: translateZ(0);
+  will-change: transform;
 }
 .day-mode.city::before {
+  position:absolute;
+  z-index: 8;
   background:
     radial-gradient(circle at 50% 18%,rgba(255,255,255,.35) 0 20%,rgba(78,139,157,.08) 78%),
     linear-gradient(90deg,rgba(31,83,98,.18),transparent 18% 82%,rgba(31,83,98,.18));
 }
-.day-mode .atmosphere { backdrop-filter:blur(1px) saturate(.8); }
+.day-mode .atmosphere { background:rgba(221,246,255,.035); }
 .day-mode .theme-toggle {
   background:rgba(255,255,255,.62);
   color:#d37b1b;
   border-color:rgba(61,108,119,.35);
 }
-.day-mode .building { filter:drop-shadow(28px 32px 28px rgba(31,76,88,.34)); }
+.day-mode .building { filter:drop-shadow(20px 24px 20px rgba(31,76,88,.26)); }
 .day-mode .building::before { background:linear-gradient(90deg,#777d7b,#303536); box-shadow:inset 10px 0 25px rgba(0,0,0,.32); }
 .day-mode .floor {
   background:
@@ -1396,6 +1407,11 @@ h1 em { font-style:normal; margin-left:.24em; }
   .city,
   .day-mode.city {
     background-attachment:scroll;
+  }
+  .day-mode.city::after {
+    position:absolute;
+    transform:none;
+    will-change:auto;
   }
   .atmosphere {
     backdrop-filter:none;
