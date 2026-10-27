@@ -316,7 +316,7 @@ export default function App() {
         <header className="roof floor" id="roof" data-floor>
           {/* Show the compressed image immediately, then reveal the video after it can play. */}
           <div className={`roof-video-wrap ${roofVideoReady ? 'video-ready' : ''}`} aria-hidden="true">
-            <img className="roof-image" src="/images/logos/i-2.avif" alt="" />
+            <img className="roof-image" src="/images/logos/i-2.avif" alt="" fetchPriority="high" decoding="async" />
             {!isMobileViewport && (
               <video
                 className={`roof-video ${roofVideoReady ? 'ready' : ''}`}
@@ -436,14 +436,14 @@ export default function App() {
                           {roomLogos.length > 0 && (
                             <div className="room-logos" aria-label={`${room[1]} ${t.logos}`}>
                               {roomLogos.map((logo) => (
-                                <img className="room-logo" key={logo} src={logo} alt="" aria-hidden="true" />
+                                <img className="room-logo" key={logo} src={logo} alt="" aria-hidden="true" loading="lazy" decoding="async" />
                               ))}
                             </div>
                           )}
                           {roomDetail?.clientLogo && (
                             <div className="room-client">
                               <span>{language === 'fr' ? t.client : roomDetail.clientLabel}</span>
-                              <img src={roomDetail.clientLogo} alt="Stellantis logo" />
+                              <img src={roomDetail.clientLogo} alt="Stellantis logo" loading="lazy" decoding="async" />
                             </div>
                           )}
                           <h4>{room[2]}</h4>
