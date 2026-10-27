@@ -1442,9 +1442,9 @@ h1 em { font-style:normal; margin-left:.24em; }
   .theme-toggle {
     backdrop-filter:none;
   }
-  .city { padding:0; }
-  .building { width:100%; }
-  .building::before { display:none; }
+  .city { padding:0 7vw; }
+  .building { width:88vw; }
+  .building::before { right:-18px; width:18px; }
   .elevator { right:5px; }
   .roof { padding:2rem; min-height:60vh; }
   .roof-sign { width:100%; padding:1.5rem; }
