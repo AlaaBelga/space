@@ -98,7 +98,7 @@ export const ROOM_DETAILS: Record<string, RoomDetail> = {
     role: 'Data & Backend Intern',
     period: 'JUL 2025',
     location: 'Rabat, Morocco',
-    logo: '/images/logos/INPT.png',
+    logo: '/images/logos/Logo_inpt.png',
     links: [{ label: 'GitHub', href: 'https://github.com/AlaaBelga/CyborgScraper' }],
     summary:
       'Built an automated web-scraping pipeline for the school’s alumni project, with human-in-the-loop validation, a MySQL database, a PHP backend and dashboards.',
@@ -290,7 +290,7 @@ export const ROOM_DETAILS: Record<string, RoomDetail> = {
     role: 'DevOps Project · Predictive ML + Auto-Remediation Platform',
     period: '2026',
     location: 'Team Project · Industrial Systems',
-    logos: ['/images/logos/predictive.png'],
+    logos: ['/images/predective%20maintenance/bridge_p1_p2.png'],
     links: [{ label: 'GitHub', href: 'https://github.com/AlaaBelga/auto-remediation-platform' }],
     summary:
       'An end-to-end, event-driven platform that predicts machine failures and automatically remediates them before they cause downtime. I built the Remediation Engine; my teammate Imane Tayf built the Predictive Engine.',
