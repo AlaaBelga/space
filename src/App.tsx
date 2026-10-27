@@ -134,6 +134,7 @@ export default function App() {
   const flyTimer = useRef<number | undefined>(undefined)
   const [litWindows, setLitWindows] = useState<Record<string, boolean>>({})
   const [litRooms, setLitRooms] = useState<Record<string, boolean>>({})
+  const [roofVideoReady, setRoofVideoReady] = useState(false)
 
   const toggleWindowLight = (winId: string) => {
     setLitWindows((prev) => ({
@@ -263,9 +264,19 @@ export default function App() {
 
       <div className={`building ${zoomRoomId ? 'chamber-entered' : ''}`} style={fly}>
         <header className="roof floor" id="roof" data-floor>
-          {/* Roof image background */}
+          {/* Show the compressed image immediately, then reveal the video after it can play. */}
           <div className="roof-video-wrap" aria-hidden="true">
-            <img className="roof-image" src="/images/head.png" alt="" />
+            <img className="roof-image" src="/images/logos/i-2.avif" alt="" />
+            <video
+              className={`roof-video ${roofVideoReady ? 'ready' : ''}`}
+              src="/images/logos/Adobe%20Express%20-%20video.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              onCanPlay={() => setRoofVideoReady(true)}
+            />
             <div className="roof-video-overlay" />
           </div>
 
@@ -398,7 +409,7 @@ export default function App() {
           <div className="lobby-inner">
             <video
               className="lobby-video"
-              src="/images/video.mp4"
+              src="/images/logos/Adobe%20Express%20-%20video.mp4"
               autoPlay
               muted
               loop
