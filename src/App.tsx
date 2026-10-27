@@ -6,6 +6,10 @@ interface FloorRoom {
   [index: number]: string
 }
 
+interface ViewTransitionDocument extends Document {
+  startViewTransition?: (callback: () => void) => { ready: Promise<void> }
+}
+
 interface ToolboxWindow {
   id: string
   title: string
@@ -133,8 +137,18 @@ export default function App() {
   const [fly, setFly] = useState<CSSProperties>({}) // camera target, read by .building in CSS
   const flyTimer = useRef<number | undefined>(undefined)
   const [litWindows, setLitWindows] = useState<Record<string, boolean>>({})
+  const toggleTheme = useCallback(() => {
+    const updateTheme = () => setIsDayMode((day) => !day)
+    const viewTransitionDocument = document as ViewTransitionDocument
+    if (viewTransitionDocument.startViewTransition) {
+      viewTransitionDocument.startViewTransition(updateTheme)
+    } else {
+      updateTheme()
+    }
+  }, [])
   const [litRooms, setLitRooms] = useState<Record<string, boolean>>({})
   const [roofVideoReady, setRoofVideoReady] = useState(false)
+  const [isDayMode, setIsDayMode] = useState(false)
 
   const toggleWindowLight = (winId: string) => {
     setLitWindows((prev) => ({
@@ -241,9 +255,19 @@ export default function App() {
   }
 
   return (
-    <main className="city">
+    <main className={`city ${isDayMode ? 'day-mode' : ''}`}>
       <div className="atmosphere" />
       <div className={`fly-veil ${zoomRoomId ? 'on' : ''}`} aria-hidden="true" />
+      <button
+        className="theme-toggle"
+        type="button"
+        onClick={toggleTheme}
+        aria-label={isDayMode ? 'Switch to night mode' : 'Switch to day mode'}
+        aria-pressed={isDayMode}
+      >
+        <span aria-hidden="true">{isDayMode ? '☀' : '☾'}</span>
+        <small>{isDayMode ? 'DAY' : 'NIGHT'}</small>
+      </button>
       <aside className="elevator">
         <div className="elevator-head">AB<br />TOWER</div>
         <div className="shaft">
@@ -265,7 +289,7 @@ export default function App() {
       <div className={`building ${zoomRoomId ? 'chamber-entered' : ''}`} style={fly}>
         <header className="roof floor" id="roof" data-floor>
           {/* Show the compressed image immediately, then reveal the video after it can play. */}
-          <div className="roof-video-wrap" aria-hidden="true">
+          <div className={`roof-video-wrap ${roofVideoReady ? 'video-ready' : ''}`} aria-hidden="true">
             <img className="roof-image" src="/images/logos/i-2.avif" alt="" />
             <video
               className={`roof-video ${roofVideoReady ? 'ready' : ''}`}
@@ -280,10 +304,6 @@ export default function App() {
             <div className="roof-video-overlay" />
           </div>
 
-          <div className="roof-cap">
-            <span>Est. 2022</span>
-            <span>Rabat, Morocco</span>
-          </div>
           <div className="roof-sign">
             <p>AI &amp; software engineer</p>
             <h1>ALAA<br /><em>BELGA</em></h1>
