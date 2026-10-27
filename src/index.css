@@ -1374,6 +1374,12 @@ h1 em { font-style:normal; margin-left:.24em; }
   .atmosphere {
     backdrop-filter:none;
   }
+  .city::before {
+    display:none;
+  }
+  .theme-toggle {
+    backdrop-filter:none;
+  }
   .city { padding:8vh 7vw 6vh; }
   .building { width:88vw; }
   .building::before { right:-18px; width:18px; }
