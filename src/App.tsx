@@ -153,6 +153,12 @@ export default function App() {
   const [litRooms, setLitRooms] = useState<Record<string, boolean>>({})
   const [roofVideoReady, setRoofVideoReady] = useState(false)
   const [isDayMode, setIsDayMode] = useState(false)
+  useEffect(() => {
+    document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute(
+      'content',
+      isDayMode ? '#b9dbe8' : '#0f1c22',
+    )
+  }, [isDayMode])
   const displayedFloors = floors.map((floor) => {
     const [label, subtitle] = floorLabel(language, floor.id, floor.label, floor.subtitle)
     if (language === 'en') return floor
