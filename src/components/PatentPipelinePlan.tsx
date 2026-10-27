@@ -471,19 +471,19 @@ export function PatentPipelinePlan({ language = 'en' }: { language?: Language })
           <svg viewBox="0 0 34 14">
             <path d="M1 12H33" stroke="#b9b8b1" strokeWidth="4" />
           </svg>
-          wall
+          {fr ? 'mur' : 'wall'}
         </span>
         <span>
           <svg viewBox="0 0 34 14">
             <path d="M4 12V2M4 2A10 10 0 0 1 14 12" fill="none" stroke="currentColor" strokeDasharray="2 2" />
           </svg>
-          door swing
+          {fr ? 'ouverture de porte' : 'door swing'}
         </span>
         <span>
           <svg viewBox="0 0 34 14">
             <path d="M1 7H33" stroke="var(--acc)" strokeWidth="2" strokeDasharray="5 4" />
           </svg>
-          patent route
+          {fr ? 'parcours du brevet' : 'patent route'}
         </span>
       </div>
     </div>
