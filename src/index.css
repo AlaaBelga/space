@@ -935,8 +935,8 @@ h1 em { font-style:normal; margin-left:.24em; }
   .floor-slab, .slab, .foundation { margin:0 -9px; padding:0 1rem; }
   .glass-wall { grid-template-columns:1fr; min-height:0; }
   .floor-intro { padding:3rem 2rem; border-right:0; border-bottom:7px solid #747a78; }
-  .rooms { grid-template-columns:1fr; }
-  .room { min-height:62vh; border-right:0; border-bottom:7px solid #6e7472; }
+  .rooms { grid-template-columns:1fr 1fr; }
+  .room { min-height:62vh; border-right:4px solid #6e7472; border-bottom:0; padding:4rem 1rem 5rem; }
   /* Mobile floors read newest to oldest while preserving the room IDs and interactions. */
   .room-education-1,
   .room-internships-1,
@@ -952,6 +952,11 @@ h1 em { font-style:normal; margin-left:.24em; }
   .room-portal-shell { width:100vw; height:100vh; max-height:100vh; }
   .room-progress { right:7px; }
   .insea-directory { grid-template-columns:1fr; grid-template-areas:"software" "data-science" "data-engineering" "economics" "annex"; }
+  .floor-intro h2 {
+    max-width:9ch;
+    font-size:clamp(1.55rem, 8vw, 2.25rem);
+    line-height:.95;
+  }
 }
 
 @media (prefers-reduced-motion:reduce) {
