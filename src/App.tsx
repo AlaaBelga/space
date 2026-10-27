@@ -132,6 +132,7 @@ const FLY_MS = 900
 export default function App() {
   const [language, setLanguage] = useState<Language>('en')
   const t = getCopy(language)
+  const isMobileViewport = typeof window !== 'undefined' && window.matchMedia('(max-width: 760px)').matches
   const [active, setActive] = useState('roof')
   const [progress, setProgress] = useState(0)
   const [zoomRoomId, setZoomRoomId] = useState<string | null>(null) // camera is flying to this room
@@ -310,16 +311,18 @@ export default function App() {
           {/* Show the compressed image immediately, then reveal the video after it can play. */}
           <div className={`roof-video-wrap ${roofVideoReady ? 'video-ready' : ''}`} aria-hidden="true">
             <img className="roof-image" src="/images/logos/i-2.avif" alt="" />
-            <video
-              className={`roof-video ${roofVideoReady ? 'ready' : ''}`}
-              src="/images/logos/Adobe%20Express%20-%20video.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              onCanPlay={() => setRoofVideoReady(true)}
-            />
+            {!isMobileViewport && (
+              <video
+                className={`roof-video ${roofVideoReady ? 'ready' : ''}`}
+                src="/images/logos/Adobe%20Express%20-%20video.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                onCanPlay={() => setRoofVideoReady(true)}
+              />
+            )}
             <div className="roof-video-overlay" />
           </div>
 
@@ -453,16 +456,18 @@ export default function App() {
         <footer className="floor lobby" id="lobby" data-floor>
           <div className="floor-slab"><span>{t.ground}</span><strong>{t.lobby}</strong><span>AB/00</span></div>
           <div className="lobby-inner">
-            <video
-              className="lobby-video"
-              src="/images/logos/Adobe%20Express%20-%20video.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-hidden="true"
-            />
+            {!isMobileViewport && (
+              <video
+                className="lobby-video"
+                src="/images/logos/Adobe%20Express%20-%20video.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-hidden="true"
+              />
+            )}
             <div className="lobby-video-overlay" aria-hidden="true" />
             <p>{t.openDoors}</p>
             <h2>{language === 'fr' ? t.build : <>{t.build}<br /><em>{t.something}</em></>}</h2>
