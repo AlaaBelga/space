@@ -263,17 +263,9 @@ export default function App() {
 
       <div className={`building ${zoomRoomId ? 'chamber-entered' : ''}`} style={fly}>
         <header className="roof floor" id="roof" data-floor>
-          {/* Local video background */}
+          {/* Roof image background */}
           <div className="roof-video-wrap" aria-hidden="true">
-            <video
-              className="roof-video"
-              src="/images/video.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-            />
+            <img className="roof-image" src="/images/head.png" alt="" />
             <div className="roof-video-overlay" />
           </div>
 
@@ -404,6 +396,17 @@ export default function App() {
         <footer className="floor lobby" id="lobby" data-floor>
           <div className="floor-slab"><span>GROUND</span><strong>Lobby</strong><span>AB/00</span></div>
           <div className="lobby-inner">
+            <video
+              className="lobby-video"
+              src="/images/video.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-hidden="true"
+            />
+            <div className="lobby-video-overlay" aria-hidden="true" />
             <p>THE DOORS ARE OPEN</p>
             <h2>Let's build<br /><em>something.</em></h2>
             <div className="lobby-links">
