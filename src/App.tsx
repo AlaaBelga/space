@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ROOM_DETAILS } from './data/roomDetails'
+import { ROOM_DETAILS_FR, floorLabel, getCopy, type Language } from './i18n'
 import { RoomPortal, RoomRect } from './components/RoomPortal'
 
 interface FloorRoom {
@@ -129,6 +130,8 @@ const floors: FloorItem[] = [
 const FLY_MS = 900
 
 export default function App() {
+  const [language, setLanguage] = useState<Language>('en')
+  const t = getCopy(language)
   const [active, setActive] = useState('roof')
   const [progress, setProgress] = useState(0)
   const [zoomRoomId, setZoomRoomId] = useState<string | null>(null) // camera is flying to this room
@@ -149,6 +152,18 @@ export default function App() {
   const [litRooms, setLitRooms] = useState<Record<string, boolean>>({})
   const [roofVideoReady, setRoofVideoReady] = useState(false)
   const [isDayMode, setIsDayMode] = useState(false)
+  const displayedFloors = floors.map((floor) => {
+    const [label, subtitle] = floorLabel(language, floor.id, floor.label, floor.subtitle)
+    if (language === 'en') return floor
+    const frenchRooms: Record<string, string[][]> = {
+      education: [['2022—24', 'CPGE Moulay Idriss', 'Mathématiques et physique · Fès', 'Deux années intensives en filière MP, conclues par le concours national CNC et l’admission à l’INSEA.'], ['2024—27', 'INSEA', 'Ingénierie des données et logiciels', 'Logiciels, statistiques et économie : apprendre à répondre aux besoins d’une entreprise, pas seulement à construire.']],
+      internships: [['JUIL. 2025', 'INPT', 'Stagiaire données et backend', 'Pipeline de scraping avec validation humaine, base MySQL, backend PHP et tableaux de bord en direct.'], ['ÉTÉ 2026', 'Capgemini', 'Stagiaire ingénierie logicielle IA', 'Pipeline d’analyse de brevets pour Stellantis. Un travail manuel d’une heure s’exécute désormais en quelques secondes.']],
+      awards: [['2E PLACE', 'Dermascope AI', 'Hackathon international d’IA', '15 000 images, 96,8 % de précision et une application Android entièrement hors ligne.'], ['3E PLACE', 'DentaLens', 'INPT × MedConnect · 48 h', 'Modèle dentaire YOLOv8, application web et visualisation 3D interactive, livrés par une équipe de deux.']],
+      teaching: [['2025—26', 'Professeure d’anglais', 'Smart Touch Agdal', 'Cours d’anglais de A1 à B2 pour des apprenantes et apprenants de 12 à 47 ans, avec des jeux et sites pédagogiques sur mesure.'], ['MAINTENANT', 'Professeure de Python', 'Algorithmics Souissi', 'Transformer des idées techniques complexes en explications accessibles à un enfant de dix ans.']],
+      projects: [['2026', 'Maintenance prédictive', 'Projet DevOps · IoT et apprentissage automatique · Industrie', 'Détection précoce des anomalies et estimation de la durée de vie restante des machines industrielles.'], ['LIVRÉ', 'Application Android DermAI', 'Application mobile de diagnostic hors ligne · Santé', 'Application d’IA embarquée 100 % hors ligne, avec modèles quantifiés et inférence caméra en moins de 85 ms.']],
+    }
+    return { ...floor, label, subtitle, rooms: frenchRooms[floor.id] ?? floor.rooms }
+  })
 
   const toggleWindowLight = (winId: string) => {
     setLitWindows((prev) => ({
@@ -262,12 +277,16 @@ export default function App() {
         className="theme-toggle"
         type="button"
         onClick={toggleTheme}
-        aria-label={isDayMode ? 'Switch to night mode' : 'Switch to day mode'}
+        aria-label={isDayMode ? t.switchNight : t.switchDay}
         aria-pressed={isDayMode}
       >
         <span aria-hidden="true">{isDayMode ? '☀' : '☾'}</span>
-        <small>{isDayMode ? 'DAY' : 'NIGHT'}</small>
+        <small>{isDayMode ? t.day : t.night}</small>
       </button>
+      <div className="language-toggle" role="group" aria-label={t.language}>
+        <button className={language === 'en' ? 'active' : ''} onClick={() => setLanguage('en')} type="button">EN</button>
+        <button className={language === 'fr' ? 'active' : ''} onClick={() => setLanguage('fr')} type="button">FR</button>
+      </div>
       <aside className="elevator">
         <div className="elevator-head">AB<br />TOWER</div>
         <div className="shaft">
@@ -277,7 +296,7 @@ export default function App() {
         </div>
         <nav>
           <a className={active === 'roof' ? 'active' : ''} href="#roof">R</a>
-          {floors.map((floor) => (
+          {displayedFloors.map((floor) => (
             <a className={active === floor.id ? 'active' : ''} href={`#${floor.id}`} key={floor.id}>
               {floor.number}
             </a>
@@ -305,17 +324,17 @@ export default function App() {
           </div>
 
           <div className="roof-sign">
-            <p>AI &amp; software engineer</p>
+            <p>{language === 'fr' ? 'Ingénieure IA et logiciel' : 'AI & software engineer'}</p>
             <h1>ALAA<br /><em>BELGA</em></h1>
-            <div className="status"><i /> Available for PFE, 2027</div>
+            <div className="status"><i /> {language === 'fr' ? 'Disponible pour un PFE, 2027' : 'Available for PFE, 2027'}</div>
           </div>
-          <a className="scroll-call" href="#education">Enter building <b>↓</b></a>
+          <a className="scroll-call" href="#education">{t.enter} <b>↓</b></a>
         </header>
 
-        {floors.map((floor, floorIndex) => (
+        {displayedFloors.map((floor, floorIndex) => (
           <section className="floor office-floor" id={floor.id} data-floor key={floor.id}>
             <div className="floor-slab">
-              <span>LEVEL {floor.number}</span>
+              <span>{t.level} {floor.number}</span>
               <strong>{floor.label}</strong>
               <span>AB/{floor.number}</span>
             </div>
@@ -344,14 +363,21 @@ export default function App() {
                         }}
                         tabIndex={0}
                         role="button"
-                        aria-label={`Skill Window ${win.badge}: ${win.title}. Click to ${isLit ? 'turn off light' : 'turn on light'}.`}
+                        aria-label={`${language === 'fr' ? 'Fenêtre de compétence' : 'Skill Window'} ${win.badge}: ${win.title}. ${isLit ? t.clickOff : t.clickOn}`}
                       >
                         <div className="window-transom-light" />
                         <div className="window-header">
                           <span className="window-badge">{win.badge}</span>
-                          <span className="window-inspect-cue">{isLit ? 'LIGHT ON ☼' : 'SWITCH LIGHT ◒'}</span>
+                          <span className="window-inspect-cue">{isLit ? t.lightOn : t.switchLight}</span>
                         </div>
-                        <h3 className="window-title">{win.title}</h3>
+                        <h3 className="window-title">{language === 'fr' ? ({
+                          Programming: 'Programmation',
+                          'Data & AI': 'Données et IA',
+                          'Databases & Visualization': 'Bases de données et visualisation',
+                          'Web & APIs': 'Web et API',
+                          'Software Engineering': 'Génie logiciel',
+                          'Cloud & DevOps': 'Cloud et DevOps',
+                        }[win.title] ?? win.title) : win.title}</h3>
                         <div className="window-skills-wrap">
                           {win.skills.map((skill, sIdx) => (
                             <span key={sIdx} className="window-skill-pill">
@@ -369,7 +395,7 @@ export default function App() {
                   {floor.rooms?.map((room, roomIndex) => {
                     const roomId = `${floor.id}-${roomIndex}`
                     const isRoomLit = Boolean(litRooms[roomId]) || zoomRoomId === roomId
-                    const roomDetail = ROOM_DETAILS[roomId]
+                    const roomDetail = (language === 'fr' ? ROOM_DETAILS_FR[roomId] : ROOM_DETAILS[roomId])
                     const roomLogos = roomDetail?.logos ?? (roomDetail?.logo ? [roomDetail.logo] : [])
                     return (
                       <article
@@ -386,20 +412,20 @@ export default function App() {
                         role="button"
                         aria-label={
                           roomId === 'education-0'
-                            ? `${room[1]}. Click to turn the light ${isRoomLit ? 'off' : 'on'}.`
-                            : `Enter chamber ${floor.number}.${roomIndex + 1}: ${room[1]}. Click to zoom inside.`
+                            ? `${room[1]}. ${isRoomLit ? t.clickOff : t.clickOn}`
+                            : `${t.enterChamber} ${floor.number}.${roomIndex + 1}: ${room[1]}. ${language === 'fr' ? 'Cliquer pour zoomer.' : 'Click to zoom inside.'}`
                         }
                       >
                         <div className="ceiling-light" />
                         <div className="room-top-bar">
-                          <span className="room-inspect-tag">{isRoomLit ? 'LIGHT ON ☼' : 'ENTER ROOM ↗'}</span>
+                          <span className="room-inspect-tag">{isRoomLit ? t.lightOn : t.enterRoom}</span>
                           <div className="room-number">{floor.number}.{roomIndex + 1}</div>
                         </div>
                         <div className="room-copy">
                           <time>{room[0]}</time>
                           <h3>{room[1]}</h3>
                           {roomLogos.length > 0 && (
-                            <div className="room-logos" aria-label={`${room[1]} logos`}>
+                            <div className="room-logos" aria-label={`${room[1]} ${t.logos}`}>
                               {roomLogos.map((logo) => (
                                 <img className="room-logo" key={logo} src={logo} alt="" aria-hidden="true" />
                               ))}
@@ -407,7 +433,7 @@ export default function App() {
                           )}
                           {roomDetail?.clientLogo && (
                             <div className="room-client">
-                              <span>{roomDetail.clientLabel}</span>
+                              <span>{language === 'fr' ? t.client : roomDetail.clientLabel}</span>
                               <img src={roomDetail.clientLogo} alt="Stellantis logo" />
                             </div>
                           )}
@@ -425,7 +451,7 @@ export default function App() {
         ))}
 
         <footer className="floor lobby" id="lobby" data-floor>
-          <div className="floor-slab"><span>GROUND</span><strong>Lobby</strong><span>AB/00</span></div>
+          <div className="floor-slab"><span>{t.ground}</span><strong>{t.lobby}</strong><span>AB/00</span></div>
           <div className="lobby-inner">
             <video
               className="lobby-video"
@@ -438,8 +464,8 @@ export default function App() {
               aria-hidden="true"
             />
             <div className="lobby-video-overlay" aria-hidden="true" />
-            <p>THE DOORS ARE OPEN</p>
-            <h2>Let's build<br /><em>something.</em></h2>
+            <p>{t.openDoors}</p>
+            <h2>{language === 'fr' ? t.build : <>{t.build}<br /><em>{t.something}</em></>}</h2>
             <div className="lobby-links">
               <a href="mailto:alaabelga@gmail.com">EMAIL <span>↗</span></a>
               <a href="https://github.com/AlaaBelga">GITHUB <span>↗</span></a>
@@ -453,9 +479,10 @@ export default function App() {
 
       {/* Swoosh Zoom-in Portal View */}
       <RoomPortal
-        detail={portalRoomId ? ROOM_DETAILS[portalRoomId] ?? null : null}
+        detail={portalRoomId ? (language === 'fr' ? ROOM_DETAILS_FR[portalRoomId] : ROOM_DETAILS[portalRoomId]) ?? null : null}
         roomRect={portalRoomRect}
         onClose={exitRoom}
+        language={language}
       />
     </main>
   )

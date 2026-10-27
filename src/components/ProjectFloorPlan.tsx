@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { Language } from '../i18n'
 
 interface PlanRoom {
   title: string
@@ -106,6 +107,37 @@ const projectImages: Record<string, ProjectImage[]> = {
   ],
 }
 
+const mediaTranslations: Record<string, string> = {
+  'Dental X-ray input': 'Entrée radiographique dentaire',
+  'The image entering DentaLens before YOLOv8 detects suspicious dental lesions.': 'Image entrant dans DentaLens avant la détection des lésions dentaires suspectes par YOLOv8.',
+  'Diagnostic web interface': 'Interface web de diagnostic',
+  'The clinician-facing web view that presents the model output in an accessible format.': 'Vue web destinée au clinicien qui présente le résultat du modèle dans un format accessible.',
+  'Trained lesion-detection model': 'Modèle de détection des lésions entraîné',
+  'A YOLOv8 model trained on more than 20,000 images with a high accuracy rate of more than 90%.': 'Modèle YOLOv8 entraîné sur plus de 20 000 images avec une précision supérieure à 90 %.',
+  'Predictive engine': 'Moteur prédictif',
+  'The predictive side of the platform, where sensor data becomes risk, anomaly, and remaining-useful-life signals.': 'Partie prédictive de la plateforme, où les données des capteurs deviennent des signaux de risque, d’anomalie et de durée de vie restante.',
+  'Passerelle between engines': 'Passerelle entre les moteurs',
+  'The bridge carries high-risk events from the predictive service to the remediation engine through Kafka.': 'La passerelle transporte les événements à haut risque du service prédictif vers le moteur de remédiation via Kafka.',
+  'Prediction API': 'API de prédiction',
+  'The API surface used to expose predictions and connect the model service to the event-driven system.': 'API qui expose les prédictions et connecte le service de modèle au système événementiel.',
+  'Containerized services': 'Services conteneurisés',
+  'Docker services package the predictive, remediation, messaging, and observability pieces together.': 'Les services Docker regroupent les composants prédictifs, de remédiation, de messagerie et d’observabilité.',
+  'Validation and tests': 'Validation et tests',
+  'The passing test suite protects the event flow, playbooks, incident logging, and service contracts.': 'La suite de tests réussie protège le flux d’événements, les playbooks, les journaux d’incidents et les contrats de service.',
+  'Offline app entry': 'Entrée de l’application hors ligne',
+  'The mobile starting point for the guided skin-condition triage flow.': 'Point de départ mobile du parcours guidé de triage des affections cutanées.',
+  'Guided onboarding': 'Accueil guidé',
+  'The tutorial explains the app before the user begins the structured assessment.': 'Le tutoriel explique l’application avant le début de l’évaluation structurée.',
+  'Body-region selection': 'Sélection de la région du corps',
+  'The 3D body model narrows the context before an image is captured.': 'Le modèle 3D du corps précise le contexte avant la capture de l’image.',
+  'Image input': 'Entrée de l’image',
+  'The camera or gallery step supplies the visual signal for on-device inference.': 'La caméra ou la galerie fournit le signal visuel pour l’inférence sur l’appareil.',
+  'Questionnaire and results': 'Questionnaire et résultats',
+  'Structured symptoms add context that a single photo cannot provide before the ranked result is shown.': 'Les symptômes structurés ajoutent le contexte qu’une seule photo ne peut pas fournir avant l’affichage du résultat classé.',
+  'DermAI application': 'Application DermAI',
+  'The complete offline triage experience, designed around privacy-preserving local inference.': 'Expérience complète de triage hors ligne, conçue autour d’une inférence locale qui protège la vie privée.',
+}
+
 const plans: Record<string, ProjectPlan> = {
   'awards-0': {
     heading: 'Dermascope AI, ground floor',
@@ -182,12 +214,159 @@ const plans: Record<string, ProjectPlan> = {
   },
 }
 
-interface ProjectFloorPlanProps {
-  planId: string
+const planTranslations: Record<string, string> = {
+  'Dermascope AI, ground floor': 'Dermascope AI, rez-de-chaussée',
+  'One photo walks in and the building forks it to two models. Hugging Face is the street outside.': 'Une photo entre et le bâtiment la dirige vers deux modèles. Hugging Face est la rue extérieure.',
+  'Six rooms, one fork, one exit. Not to scale.': 'Six salles, une bifurcation, une sortie. Schéma non contractuel.',
+  'Photo Intake': 'Réception de la photo',
+  'Skin photo, uploaded': 'Photo de peau importée',
+  'Image tensor': 'Tenseur d’image',
+  'A photo of the skin is uploaded from the web interface.': 'Une photo de peau est importée depuis l’interface web.',
+  'Preprocessing & Routing': 'Prétraitement et routage',
+  'Public route or professional route': 'Parcours public ou professionnel',
+  'The request is sent to the public model or the professional one.': 'La requête est envoyée au modèle public ou professionnel.',
+  'Public Screening Model': 'Modèle de dépistage public',
+  'Routed image': 'Image routée',
+  '9-class prediction': 'Prédiction à 9 classes',
+  'Classifies 9 common non-cancerous skin conditions.': 'Classe 9 affections cutanées courantes non cancéreuses.',
+  'Cancer Detection Model': 'Modèle de détection du cancer',
+  '4-class prediction': 'Prédiction à 4 classes',
+  'For professional use, including melanoma and basal-cell carcinoma.': 'Pour un usage professionnel, notamment le mélanome et le carcinome basocellulaire.',
+  'Model outputs': 'Sorties des modèles',
+  'JSON result': 'Résultat JSON',
+  'A Flask and PyTorch server serving both models.': 'Serveur Flask et PyTorch qui expose les deux modèles.',
+  'Web Interface': 'Interface web',
+  'Result shown to the user': 'Résultat affiché à l’utilisateur',
+  'HTML, CSS and JavaScript deployed to Hugging Face.': 'HTML, CSS et JavaScript déployés sur Hugging Face.',
+  'DentaLens, ground floor': 'DentaLens, rez-de-chaussée',
+  'A short plan for a 48-hour build. One detector, then two exits: a web app and a Blender 3D viewer.': 'Le plan d’une réalisation en 48 heures : un détecteur, puis deux sorties, une application web et une visionneuse 3D Blender.',
+  'Four rooms, built in two days. Not to scale.': 'Quatre salles construites en deux jours. Schéma non contractuel.',
+  'Scan Intake': 'Réception du scan',
+  'Dental X-ray': 'Radiographie dentaire',
+  'Image to detector': 'Image vers le détecteur',
+  'A dental image comes in for analysis.': 'Une image dentaire entre pour être analysée.',
+  'YOLOv8 Detector': 'Détecteur YOLOv8',
+  Image: 'Image',
+  'Lesion boxes': 'Cadres des lésions',
+  'The model trained to detect dental lesions.': 'Modèle entraîné pour détecter les lésions dentaires.',
+  'Web App': 'Application web',
+  'Detected lesions': 'Lésions détectées',
+  'Interactive diagnostic view': 'Vue diagnostique interactive',
+  'An interface a clinician can read at a glance.': 'Une interface lisible d’un seul coup d’œil par un clinicien.',
+  '3D Viewer': 'Visionneuse 3D',
+  'Interactive 3D visualization': 'Visualisation 3D interactive',
+  'Produced in Blender during the hackathon.': 'Produite avec Blender pendant le hackathon.',
+  'DermAI, the offline corridor': 'DermAI, le corridor hors ligne',
+  'Four intake stages, then on-device inference. The right wall has no door: nothing leaves the device.': 'Quatre étapes d’entrée, puis une inférence sur l’appareil. Le mur de droite n’a pas de porte : rien ne quitte l’appareil.',
+  'One corridor, one entrance, no network. Not to scale.': 'Un corridor, une entrée, aucun réseau. Schéma non contractuel.',
+  'Role Select': 'Choix du rôle',
+  'Patient or professional': 'Patient ou professionnel',
+  'Role-based flow': 'Parcours selon le rôle',
+  'Guided onboarding.': 'Parcours d’accueil guidé.',
+  '3D Body Model': 'Modèle 3D du corps',
+  Role: 'Rôle',
+  'Body region': 'Région du corps',
+  'SceneView removes doubt about where the photo comes from.': 'SceneView précise la région concernée avant la prise de vue.',
+  'Image Capture': 'Capture de l’image',
+  'Skin image': 'Image de peau',
+  'CameraX live capture or gallery import.': 'Capture en direct avec CameraX ou import depuis la galerie.',
+  'Symptom Questionnaire': 'Questionnaire de symptômes',
+  'Image plus context': 'Image et contexte',
+  'Captures context a photo cannot show.': 'Capture le contexte qu’une photo ne peut pas montrer.',
+  'On-device Inference': 'Inférence sur l’appareil',
+  'Image and context': 'Image et contexte',
+  'Ranked candidates': 'Candidats classés',
+  'PyTorch Lite runs on the device.': 'PyTorch Lite s’exécute sur l’appareil.',
+  'Top-3 Result': 'Résultat Top 3',
+  'Shortlist with risk label': 'Sélection avec niveau de risque',
+  'A triage aid, not a diagnostic device.': 'Une aide au triage, pas un dispositif de diagnostic.',
+  'Predictive Maintenance, two wings': 'Maintenance prédictive, deux ailes',
+  'Two independent wings joined by a skybridge. The west wing predicts, the east wing acts. Kafka is the central hall.': 'Deux ailes indépendantes reliées par une passerelle. L’aile ouest prédit, l’aile est agit. Kafka est le hall central.',
+  'Two wings, one bridge. Not to scale.': 'Deux ailes, une passerelle. Schéma non contractuel.',
+  'CMAPSS Simulator': 'Simulateur CMAPSS',
+  'Raw sensor data': 'Données brutes des capteurs',
+  'Sensor payload': 'Charge utile des capteurs',
+  'Replays NASA CMAPSS sensor data.': 'Rejoue les données de capteurs NASA CMAPSS.',
+  'Predictive Engine': 'Moteur prédictif',
+  'Risk score, RUL, anomaly status': 'Score de risque, RUL, état des anomalies',
+  'Imane Tayf’s RandomForest engine served by FastAPI.': 'Moteur RandomForest d’Imane Tayf exposé par FastAPI.',
+  'Bridge (Passerelle)': 'Passerelle',
+  Predictions: 'Prédictions',
+  'High-risk events': 'Événements à haut risque',
+  'Polls the predictive wing and publishes events to Kafka.': 'Interroge l’aile prédictive et publie les événements dans Kafka.',
+  'Kafka Hall': 'Hall Kafka',
+  'Validated events': 'Événements validés',
+  'Decouples event generation from playbook execution.': 'Dissocie la génération des événements de l’exécution des playbooks.',
+  'Remediation Engine': 'Moteur de remédiation',
+  'Kafka events': 'Événements Kafka',
+  'Actuator commands, alerts': 'Commandes d’actionneurs, alertes',
+  'Alaa’s engine validates events and runs idempotent playbooks.': 'Le moteur d’Alaa valide les événements et exécute des playbooks idempotents.',
+  'Incident Log & Alerts': 'Journal des incidents et alertes',
+  'Playbook outcome': 'Résultat du playbook',
+  'Incident record, Slack alert': 'Incident, alerte Slack',
+  'SQLite tracking and a mock Slack webhook.': 'Suivi SQLite et webhook Slack simulé.',
+  'Grafana & Prometheus': 'Grafana et Prometheus',
+  Metrics: 'Métriques',
+  Dashboards: 'Tableaux de bord',
+  'Observability for health, latency and predictions.': 'Observabilité de l’état, de la latence et des prédictions.',
+  'INPT scraper, with a human in the loop': 'Scraper INPT, avec validation humaine',
+  'Automated scraping makes mistakes, so a person validates before anything is stored. Rejected rows loop back.': 'Le scraping automatique peut se tromper : une personne valide avant tout stockage. Les lignes rejetées reviennent au début.',
+  'Five rooms and a loop. Not to scale.': 'Cinq salles et une boucle. Schéma non contractuel.',
+  Scraper: 'Scraper',
+  'Alumni web sources': 'Sources web des anciens',
+  'Raw records': 'Enregistrements bruts',
+  'Automated collection of data from the web.': 'Collecte automatisée des données sur le web.',
+  'Human Validation': 'Validation humaine',
+  'Approved rows or rejects': 'Lignes approuvées ou rejetées',
+  'A person reviews records. Rejects return to the scraper.': 'Une personne vérifie les enregistrements. Les rejets retournent au scraper.',
+  'MySQL Database': 'Base de données MySQL',
+  'Approved rows': 'Lignes approuvées',
+  'Stored records': 'Enregistrements stockés',
+  'Relational storage for validated data.': 'Stockage relationnel des données validées.',
+  'PHP Backend': 'Backend PHP',
+  'JSON endpoints': 'Endpoints JSON',
+  'Serves the data to the front end.': 'Expose les données au frontend.',
+  'Views on the data': 'Vues sur les données',
+  'The alumni dashboards students kept building on.': 'Les tableaux de bord des anciens que les étudiants ont continué à développer.',
+  UPLOAD: 'IMPORTER',
+  IMAGE: 'IMAGE',
+  '9 CLASSES': '9 CLASSES',
+  '4 CATEGORIES': '4 CATÉGORIES',
+  'HUGGING FACE': 'HUGGING FACE',
+  'X-RAY': 'RADIO',
+  LESIONS: 'LÉSIONS',
+  CLINICIAN: 'CLINICIEN',
+  VIEWER: 'VISIONNEUSE',
+  PATIENT: 'PATIENT',
+  'NO NETWORK': 'AUCUN RÉSEAU',
+  SENSORS: 'CAPTEURS',
+  '/PREDICT': '/PRÉDIRE',
+  METRICS: 'MÉTRIQUES',
+  SOURCES: 'SOURCES',
+  'LOOP BACK': 'RETOUR EN BOUCLE',
+  OUT: 'SORTIE',
 }
 
-export function ProjectFloorPlan({ planId }: ProjectFloorPlanProps) {
-  const plan = plans[planId]
+function localizePlan(plan: ProjectPlan): ProjectPlan {
+  const translate = (value: string) => planTranslations[value] ?? value
+  return {
+    ...plan,
+    heading: translate(plan.heading),
+    subtitle: translate(plan.subtitle),
+    note: translate(plan.note),
+    rooms: plan.rooms.map((room) => ({ ...room, title: translate(room.title), input: translate(room.input), output: translate(room.output), description: translate(room.description) })),
+    labels: plan.labels.map(([label, x, y]) => [translate(label), x, y]),
+  }
+}
+
+interface ProjectFloorPlanProps {
+  planId: string
+  language?: Language
+}
+
+export function ProjectFloorPlan({ planId, language = 'en' }: ProjectFloorPlanProps) {
+  const fr = language === 'fr'
+  const plan = fr ? localizePlan(plans[planId]) : plans[planId]
   const [selected, setSelected] = useState<PlanRoom | null>(null)
   const [tracing, setTracing] = useState(false)
 
@@ -204,8 +383,8 @@ export function ProjectFloorPlan({ planId }: ProjectFloorPlanProps) {
       <h1>{plan.heading}</h1>
       <p className="sub">{plan.subtitle}</p>
       <div className="bar">
-        <button onClick={trace} disabled={tracing} type="button">{tracing ? 'Tracing…' : 'Trace a request'}</button>
-        <span className="hint">Follows one input from the entrance to the exit.</span>
+        <button onClick={trace} disabled={tracing} type="button">{tracing ? (fr ? 'Traçage…' : 'Tracing…') : (fr ? 'Suivre une requête' : 'Trace a request')}</button>
+        <span className="hint">{fr ? "Suit une entrée de l'entrée jusqu'à la sortie." : 'Follows one input from the entrance to the exit.'}</span>
       </div>
       <div className="plan">
         <svg viewBox="0 0 1040 380" role="img" aria-label={`${plan.heading} floor plan`}>
@@ -232,22 +411,22 @@ export function ProjectFloorPlan({ planId }: ProjectFloorPlanProps) {
       <div className="plan-card" aria-live="polite">
         {selected ? (
           <>
-            <p className="k">Selected room</p>
+            <p className="k">{fr ? 'Salle sélectionnée' : 'Selected room'}</p>
             <h2>{selected.title}</h2>
-            <dl><dt>In</dt><dd>{selected.input}</dd><dt>Out</dt><dd>{selected.output}</dd></dl>
+            <dl><dt>{fr ? 'Entrée' : 'In'}</dt><dd>{selected.input}</dd><dt>{fr ? 'Sortie' : 'Out'}</dt><dd>{selected.output}</dd></dl>
             <p>{selected.description}</p>
           </>
         ) : (
           <>
-            <p className="k">No room selected</p>
-            <h2>Walk the building</h2>
-            <p>Hover or tap a room to inspect its input, output, and role in the system.</p>
+            <p className="k">{fr ? 'Aucune salle sélectionnée' : 'No room selected'}</p>
+            <h2>{fr ? 'Parcourir le bâtiment' : 'Walk the building'}</h2>
+            <p>{fr ? 'Survolez ou touchez une salle pour inspecter son entrée, sa sortie et son rôle dans le système.' : 'Hover or tap a room to inspect its input, output, and role in the system.'}</p>
           </>
         )}
       </div>
       {planId === 'awards-0' && (
         <div className="plan-video">
-          <p className="k">Dermascope AI in motion</p>
+          <p className="k">{fr ? 'Dermascope AI en action' : 'Dermascope AI in motion'}</p>
           <div className="plan-video-frame">
             <iframe
               src="https://www.youtube.com/embed/BDn34WqEOdE?rel=0"
@@ -260,15 +439,15 @@ export function ProjectFloorPlan({ planId }: ProjectFloorPlanProps) {
         </div>
       )}
       {projectImages[planId] && (
-        <section className="project-media" aria-label="Project screenshots">
-          <p className="k">Inside the build</p>
+        <section className="project-media" aria-label={fr ? 'Captures du projet' : 'Project screenshots'}>
+          <p className="k">{fr ? 'Dans la réalisation' : 'Inside the build'}</p>
           <div className="project-media-grid">
             {projectImages[planId].map((image) => (
               <figure className="project-media-card" key={image.src}>
                 <img src={image.src} alt={image.title} loading="lazy" />
                 <figcaption>
-                  <strong>{image.title}</strong>
-                  <span>{image.explanation}</span>
+                  <strong>{fr ? mediaTranslations[image.title] ?? image.title : image.title}</strong>
+                  <span>{fr ? mediaTranslations[image.explanation] ?? image.explanation : image.explanation}</span>
                 </figcaption>
               </figure>
             ))}

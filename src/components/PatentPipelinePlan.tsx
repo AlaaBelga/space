@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import type { Language } from '../i18n'
 
 interface RoomItem {
   n: number
@@ -11,6 +12,43 @@ interface RoomItem {
   o: string
   d: string
 }
+
+const patentTranslations: Record<string, string> = {
+  'Document Parser': 'Analyseur de documents',
+  'Patent DOCX or PDF, uploaded': 'Brevet DOCX ou PDF importé',
+  'Raw text': 'Texte brut',
+  'The entrance hall. The uploaded patent file is turned into raw text before anything else happens.': 'Le hall d’entrée. Le fichier de brevet importé est converti en texte brut avant toute autre étape.',
+  'Metadata Extraction': 'Extraction des métadonnées',
+  'Cleaned concepts to room 3, prior art to room 4': 'Concepts nettoyés vers la salle 3, antériorités vers la salle 4',
+  'The only room with two exits. Metadata is extracted here and the document splits into two streams.': 'La seule salle avec deux sorties. Les métadonnées y sont extraites et le document se divise en deux flux.',
+  'ML Classifier': 'Classifieur ML',
+  'Cleaned concepts': 'Concepts nettoyés',
+  'Results to room 5': 'Résultats vers la salle 5',
+  'Receives the cleaned concepts from room 2 and hands its output on to the database.': 'Reçoit les concepts nettoyés de la salle 2 et transmet son résultat à la base de données.',
+  'LLM Abstract Rewriter': 'Réécriture du résumé par LLM',
+  'Prior art': 'Antériorités',
+  'Receives the prior art from room 2, rewrites the abstract, and passes it on to the database.': 'Reçoit les antériorités de la salle 2, réécrit le résumé et le transmet à la base de données.',
+  'SQLite Database': 'Base de données SQLite',
+  'Output of rooms 3 and 4': 'Sortie des salles 3 et 4',
+  'Stored records to room 6': 'Enregistrements stockés vers la salle 6',
+  'Both branches converge here. Your diagram draws it as a diamond, so on the plan it is the vault: two doors in, one door out.': 'Les deux branches convergent ici. Le schéma le représente comme un diamant : deux portes d’entrée et une porte de sortie.',
+  'Generated Word Report': 'Rapport Word généré',
+  'Stored records': 'Enregistrements stockés',
+  'Word report, out to the street': 'Rapport Word, sortie vers la rue',
+  'The last room. The report is generated from what the database holds and leaves through the exit door.': 'La dernière salle. Le rapport est généré à partir du contenu de la base et sort par la porte de sortie.',
+  UPLOAD: 'IMPORT',
+  'RAW TEXT': 'TEXTE BRUT',
+  'CLEANED CONCEPTS': 'CONCEPTS NETTOYÉS',
+  'REPORT OUT': 'RAPPORT EN SORTIE',
+}
+
+const localizePatentRoom = (room: RoomItem): RoomItem => ({
+  ...room,
+  t: patentTranslations[room.t] ?? room.t,
+  i: patentTranslations[room.i] ?? room.i,
+  o: patentTranslations[room.o] ?? room.o,
+  d: patentTranslations[room.d] ?? room.d,
+})
 
 const R: RoomItem[] = [
   {
@@ -106,7 +144,9 @@ const TAGS: [string, number, number][] = [
   ['REPORT OUT', 948, 174],
 ]
 
-export function PatentPipelinePlan() {
+export function PatentPipelinePlan({ language = 'en' }: { language?: Language }) {
+  const fr = language === 'fr'
+  const roomText = (room: RoomItem) => fr ? localizePatentRoom(room) : room
   const [selectedRoom, setSelectedRoom] = useState<RoomItem | null>(null)
   const [activeFills, setActiveFills] = useState<number[]>([])
   const [isTracing, setIsTracing] = useState(false)
@@ -167,7 +207,7 @@ export function PatentPipelinePlan() {
           R.forEach((r) => {
             if (pt.x > r.x + 3 && pt.x < r.x + r.w - 3 && pt.y > r.y && pt.y < r.y + r.h) {
               setActiveFills((prev) => (prev.includes(r.n) ? prev : [...prev, r.n]))
-              setSelectedRoom(r)
+              setSelectedRoom(roomText(r))
             }
           })
         })
@@ -207,16 +247,16 @@ export function PatentPipelinePlan() {
 
   return (
     <div className="patent-building-section">
-      <h1>Patent pipeline, ground floor</h1>
+      <h1>{fr ? 'Pipeline de brevets, rez-de-chaussée' : 'Patent pipeline, ground floor'}</h1>
       <p className="sub">
-        Your architecture diagram drawn as a building: each stage is a room, each arrow is a doorway. Hover or tap a room for its inputs and outputs.
+        {fr ? 'Votre architecture dessinée comme un bâtiment : chaque étape est une salle, chaque flèche une porte. Survolez ou touchez une salle pour voir ses entrées et sorties.' : 'Your architecture diagram drawn as a building: each stage is a room, each arrow is a doorway. Hover or tap a room for its inputs and outputs.'}
       </p>
 
       <div className="bar">
         <button id="go" onClick={handleTrace} disabled={isTracing} type="button">
-          {isTracing ? 'Tracing…' : activeFills.length > 0 ? 'Trace again' : 'Trace a patent'}
+          {isTracing ? (fr ? 'Traçage…' : 'Tracing…') : activeFills.length > 0 ? (fr ? 'Suivre à nouveau' : 'Trace again') : (fr ? 'Suivre un brevet' : 'Trace a patent')}
         </button>
-        <span className="hint">Follows one upload from the street to the report.</span>
+        <span className="hint">{fr ? 'Suit un brevet de la rue jusqu’au rapport.' : 'Follows one upload from the street to the report.'}</span>
       </div>
 
       <div className="plan">
@@ -226,9 +266,9 @@ export function PatentPipelinePlan() {
           role="img"
           aria-labelledby="t d"
         >
-          <title id="t">Floor plan of the patent analysis pipeline</title>
+          <title id="t">{fr ? 'Plan du pipeline d’analyse de brevets' : 'Floor plan of the patent analysis pipeline'}</title>
           <desc id="d">
-            Six rooms: document parser, metadata extraction, ML classifier, LLM abstract rewriter, SQLite database and generated Word report. Metadata extraction feeds both the classifier and the rewriter, which both feed the database.
+            {fr ? 'Six salles : analyseur de documents, extraction des métadonnées, classifieur ML, réécriture du résumé par LLM, base SQLite et rapport Word généré. L’extraction des métadonnées alimente le classifieur et le réécrivain, qui alimentent tous deux la base.' : 'Six rooms: document parser, metadata extraction, ML classifier, LLM abstract rewriter, SQLite database and generated Word report. Metadata extraction feeds both the classifier and the rewriter, which both feed the database.'}
           </desc>
 
           <defs>
@@ -255,6 +295,7 @@ export function PatentPipelinePlan() {
           {/* Rooms (Fills) */}
           <g id="rooms">
             {R.map((r) => {
+              const localizedRoom = roomText(r)
               const isOn = activeFills.includes(r.n)
               return (
                 <rect
@@ -266,10 +307,10 @@ export function PatentPipelinePlan() {
                   className={`room ${isOn ? 'on' : ''}`}
                   tabIndex={0}
                   role="button"
-                  aria-label={`Room ${r.n}: ${r.t}`}
-                  onMouseEnter={() => setSelectedRoom(r)}
-                  onFocus={() => setSelectedRoom(r)}
-                  onClick={() => setSelectedRoom(r)}
+                  aria-label={`${fr ? 'Salle' : 'Room'} ${r.n}: ${localizedRoom.t}`}
+                  onMouseEnter={() => setSelectedRoom(localizedRoom)}
+                  onFocus={() => setSelectedRoom(localizedRoom)}
+                  onClick={() => setSelectedRoom(localizedRoom)}
                 />
               )
             })}
@@ -381,7 +422,7 @@ export function PatentPipelinePlan() {
                 >
                   <tspan className="lb-num">0{r.n}</tspan>
                   <tspan className="lb-sep"> · </tspan>
-                  <tspan className="lb-txt">{r.t.toUpperCase()}</tspan>
+                  <tspan className="lb-txt">{roomText(r).t.toUpperCase()}</tspan>
                 </text>
               )
             })}
@@ -396,7 +437,7 @@ export function PatentPipelinePlan() {
           <line className="dim" x1="50" y1="350" x2="910" y2="350" />
           <path className="dim" d="M50 345v10M910 345v10" />
           <text className="dt" x="480" y="366">
-            Six rooms, one entrance, one exit. Not to scale.
+            {fr ? 'Six salles, une entrée, une sortie. Schéma non contractuel.' : 'Six rooms, one entrance, one exit. Not to scale.'}
           </text>
         </svg>
       </div>
@@ -405,21 +446,21 @@ export function PatentPipelinePlan() {
       <div id="card" aria-live="polite">
         {selectedRoom ? (
           <>
-            <p className="k">Room {selectedRoom.n}</p>
+            <p className="k">{fr ? 'Salle' : 'Room'} {selectedRoom.n}</p>
             <h2>{selectedRoom.t}</h2>
             <dl>
-              <dt>In</dt>
+              <dt>{fr ? 'Entrée' : 'In'}</dt>
               <dd>{selectedRoom.i}</dd>
-              <dt>Out</dt>
+              <dt>{fr ? 'Sortie' : 'Out'}</dt>
               <dd>{selectedRoom.o}</dd>
             </dl>
             <p>{selectedRoom.d}</p>
           </>
         ) : (
           <>
-            <p className="k">No room selected</p>
-            <h2>Walk the building</h2>
-            <p>Hover a room, tab to it, or press “Trace a patent” to watch a document pass through every stage.</p>
+            <p className="k">{fr ? 'Aucune salle sélectionnée' : 'No room selected'}</p>
+            <h2>{fr ? 'Parcourir le bâtiment' : 'Walk the building'}</h2>
+            <p>{fr ? 'Survolez une salle, utilisez la touche Tab ou lancez « Suivre un brevet » pour voir un document traverser chaque étape.' : 'Hover a room, tab to it, or press “Trace a patent” to watch a document pass through every stage.'}</p>
           </>
         )}
       </div>

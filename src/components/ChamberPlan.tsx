@@ -1,11 +1,14 @@
 import { RoomDetail } from '../data/roomDetails'
+import { getCopy, type Language } from '../i18n'
 
 interface ChamberPlanProps {
   detail: RoomDetail
   onClose: () => void
+  language?: Language
 }
 
-export function ChamberPlan({ detail, onClose }: ChamberPlanProps) {
+export function ChamberPlan({ detail, onClose, language = 'en' }: ChamberPlanProps) {
+  const t = getCopy(language)
   return (
     <div className="patent-building-section chamber-generic-section">
       <div className="chamber-header-row">
@@ -14,7 +17,7 @@ export function ChamberPlan({ detail, onClose }: ChamberPlanProps) {
           <p className="sub">{detail.summary}</p>
         </div>
         <button className="chamber-close-btn" onClick={onClose} type="button">
-          COLLAPSE [✕]
+          {t.collapse}
         </button>
       </div>
 
@@ -31,11 +34,11 @@ export function ChamberPlan({ detail, onClose }: ChamberPlanProps) {
       {/* Blueprint Architecture Spec Card */}
       <div id="card" aria-live="polite">
         <p className="k">{detail.role} · {detail.location}</p>
-        <h2>System Architecture & Specifications</h2>
+        <h2>{t.architecture}</h2>
         <dl>
-          <dt>Challenge</dt>
+          <dt>{t.challenge}</dt>
           <dd>{detail.problem}</dd>
-          <dt>Engineered Solution</dt>
+          <dt>{t.solution}</dt>
           <dd>{detail.solution}</dd>
         </dl>
         <div className="chamber-specs-grid">
@@ -50,7 +53,7 @@ export function ChamberPlan({ detail, onClose }: ChamberPlanProps) {
 
       {/* Technologies pills */}
       <div className="chamber-tech-row">
-        <span className="tech-title">ARSENAL:</span>
+        <span className="tech-title">{t.arsenal}</span>
         {detail.technologies.map((t, idx) => (
           <span key={idx} className="chamber-tech-tag">
             {t}

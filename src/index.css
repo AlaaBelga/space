@@ -294,6 +294,32 @@
 }
 .theme-toggle:hover { transform:translateY(-2px); border-color:var(--acc); }
 .theme-toggle small { font:500 7px var(--mono); letter-spacing:.08em; }
+.language-toggle {
+  position: fixed;
+  top: 7vh;
+  left: calc(2.2vw + 52px);
+  z-index: 13;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid rgba(236,241,239,.35);
+  border-radius: 999px;
+  background: rgba(16,25,29,.48);
+  backdrop-filter: blur(8px);
+}
+.language-toggle button {
+  min-width: 28px;
+  padding: 5px 6px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255,255,255,.62);
+  cursor: pointer;
+  font: 600 9px var(--mono);
+  letter-spacing: .06em;
+}
+.language-toggle button.active,
+.language-toggle button:hover { background: var(--acc); color: #172022; }
 
 .building {
   position: relative; z-index: 2; width: min(1020px, 78vw); margin: 0 auto;
@@ -1409,6 +1435,7 @@ h1 em { font-style:normal; margin-left:.24em; }
   .room-progress { right:7px; }
   .insea-directory { grid-template-columns:1fr; grid-template-areas:"software" "data-science" "data-engineering" "economics" "annex"; }
   .theme-toggle { top:3vh; left:12px; }
+  .language-toggle { top:3vh; left:64px; }
   .floor-intro h2 {
     max-width:9ch;
     font-size:clamp(1.55rem, 8vw, 2.25rem);

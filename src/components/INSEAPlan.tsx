@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { Language } from '../i18n'
 
 interface Module {
   semester: number
@@ -90,17 +91,18 @@ const domains: Domain[] = [
   },
 ]
 
-export function INSEAPlan() {
+export function INSEAPlan({ language = 'en' }: { language?: Language }) {
   const [semester, setSemester] = useState(0)
+  const fr = language === 'fr'
 
   return (
     <div className="insea-plan">
-      <h1>INSEA, the building</h1>
+      <h1>{fr ? 'INSEA, le bâtiment' : 'INSEA, the building'}</h1>
       <p className="sub">
-        Five domains for working with data and software, plus an annex for languages and communication. Pick a semester to see where it was spent.
+        {fr ? 'Cinq domaines pour travailler avec les données et les logiciels, plus une annexe consacrée aux langues et à la communication. Choisissez un semestre pour voir son contenu.' : 'Five domains for working with data and software, plus an annex for languages and communication. Pick a semester to see where it was spent.'}
       </p>
       <div className="insea-semesters" role="group" aria-label="Filter by semester">
-        <span className="hint">Semester</span>
+        <span className="hint">{fr ? 'Semestre' : 'Semester'}</span>
         {[0, 1, 2, 3, 4, 5].map((value) => (
           <button
             className={semester === value ? 'active' : ''}
@@ -108,7 +110,7 @@ export function INSEAPlan() {
             onClick={() => setSemester(value)}
             type="button"
           >
-            {value ? `S${value}` : 'All'}
+            {value ? `S${value}` : (fr ? 'Tous' : 'All')}
           </button>
         ))}
       </div>
@@ -117,7 +119,7 @@ export function INSEAPlan() {
           <section className={`insea-domain ${domain.className}`} key={domain.title}>
             <header>
               <h2>{domain.title}</h2>
-              <span>{domain.modules.length} modules</span>
+              <span>{domain.modules.length} {fr ? 'modules' : 'modules'}</span>
             </header>
             <p>{domain.description}</p>
             <ul>
@@ -132,7 +134,7 @@ export function INSEAPlan() {
           </section>
         ))}
       </div>
-      <p className="insea-foot">Semesters 1 to 5 are shown. Semester 6 is the end-of-studies project (PFE) in 2027.</p>
+      <p className="insea-foot">{fr ? 'Les semestres 1 à 5 sont affichés. Le semestre 6 correspond au projet de fin d’études (PFE) en 2027.' : 'Semesters 1 to 5 are shown. Semester 6 is the end-of-studies project (PFE) in 2027.'}</p>
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { Language } from '../i18n'
 
 const levels = [
   ['A1', 'beginner'],
@@ -46,22 +47,23 @@ const projects = [
   },
 ]
 
-export function TeachingRooms({ roomId }: { roomId: 'teaching-0' | 'teaching-1' }) {
+export function TeachingRooms({ roomId, language = 'en' }: { roomId: 'teaching-0' | 'teaching-1'; language?: Language }) {
   const [level, setLevel] = useState('A1')
   const [age, setAge] = useState(12)
   const [projectIndex, setProjectIndex] = useState(0)
   const [simple, setSimple] = useState(false)
   const project = projects[projectIndex]
   const isEnglish = roomId === 'teaching-0'
+  const fr = language === 'fr'
 
   return (
     <div className={`teaching-rooms ${isEnglish ? 'english-room' : 'python-room'}`}>
-      <h1>{isEnglish ? 'English classroom' : 'Python classroom'}</h1>
+      <h1>{isEnglish ? (fr ? 'Salle de cours d’anglais' : 'English classroom') : (fr ? 'Salle de cours de Python' : 'Python classroom')}</h1>
       {isEnglish ? (
         <>
-          <p className="sub">A year of teaching English, with educational games and websites coded from scratch for each group.</p>
+          <p className="sub">{fr ? 'Une année à enseigner l’anglais avec des jeux pédagogiques et des sites web codés sur mesure pour chaque groupe.' : 'A year of teaching English, with educational games and websites coded from scratch for each group.'}</p>
           <ul className="teaching-stats"><li>Smart Touch Agdal</li><li>2025—2026</li></ul>
-          <p className="teaching-kicker">Climb the ladder</p>
+          <p className="teaching-kicker">{fr ? 'Grimper l’échelle' : 'Climb the ladder'}</p>
           <div className="language-ladder">
             {levels.map(([code, label]) => (
               <button className={level === code ? 'selected' : ''} key={code} onClick={() => setLevel(code)} type="button">
@@ -69,36 +71,36 @@ export function TeachingRooms({ roomId }: { roomId: 'teaching-0' | 'teaching-1' 
               </button>
             ))}
           </div>
-          <p className="teaching-kicker">Same level, different group</p>
-          <div className="learner-age"><b>{age}</b><span>{age <= 17 ? 'teen group' : age <= 29 ? 'young adults' : 'adult group'}</span></div>
-          <input type="range" min="12" max="47" value={age} onChange={(event) => setAge(Number(event.target.value))} aria-label="Learner age" />
+          <p className="teaching-kicker">{fr ? 'Même niveau, groupe différent' : 'Same level, different group'}</p>
+          <div className="learner-age"><b>{age}</b><span>{age <= 17 ? (fr ? 'adolescents' : 'teen group') : age <= 29 ? (fr ? 'jeunes adultes' : 'young adults') : (fr ? 'adultes' : 'adult group')}</span></div>
+          <input type="range" min="12" max="47" value={age} onChange={(event) => setAge(Number(event.target.value))} aria-label={fr ? 'Âge de l’apprenant' : 'Learner age'} />
         </>
       ) : (
         <>
-          <p className="sub">Teaching kids and teenagers means every idea has to be made simple. I use the same skill on projects, with clients and with non-technical colleagues.</p>
+          <p className="sub">{fr ? 'Enseigner aux enfants et aux adolescents oblige à rendre chaque idée simple. J’applique la même méthode aux projets, aux clients et aux collègues non techniques.' : 'Teaching kids and teenagers means every idea has to be made simple. I use the same skill on projects, with clients and with non-technical colleagues.'}</p>
           <ul className="teaching-stats"><li>Algorithmics Souissi</li><li>Now</li><li>Kids & teenagers</li><li>Python</li></ul>
-          <h2>I teach Python. I also ship it.</h2>
+          <h2>{fr ? 'J’enseigne Python. Je le mets aussi en production.' : 'I teach Python. I also ship it.'}</h2>
           <div className="teaching-cards">
-            <article><b>Clear explanations</b><span>I turn complicated technical ideas into plain, concrete terms until a ten-year-old can follow them.</span></article>
+            <article><b>{fr ? 'Des explications claires' : 'Clear explanations'}</b><span>{fr ? 'Je transforme les idées techniques complexes en termes concrets jusqu’à ce qu’un enfant de dix ans puisse les suivre.' : 'I turn complicated technical ideas into plain, concrete terms until a ten-year-old can follow them.'}</span></article>
             <article><b>Adapts to the audience</b><span>From teenagers to adults in English, and kids in Python: I listen first, adapt fast and keep people motivated.</span></article>
             <article><b>Ships real Python</b><span>Python sits behind my internships, hackathon wins and team projects, from data pipelines to deep learning APIs.</span></article>
           </div>
-          <p className="teaching-kicker">Try it: one project, two audiences</p>
+          <p className="teaching-kicker">{fr ? 'À vous : un projet, deux publics' : 'Try it: one project, two audiences'}</p>
           <div className="project-tabs">
             {projects.map((item, index) => <button className={index === projectIndex ? 'selected' : ''} key={item.name} onClick={() => setProjectIndex(index)} type="button">{item.name}</button>)}
           </div>
           <button className="explain-toggle" aria-pressed={simple} onClick={() => setSimple(!simple)} type="button">
-            <i /> Explain it to a ten-year-old
+            <i /> {fr ? 'L’expliquer à un enfant de dix ans' : 'Explain it to a ten-year-old'}
           </button>
           <div className="explain-board">
-            <h3>{simple ? 'Ten-year-old version' : 'Technical version'}</h3>
+            <h3>{simple ? (fr ? 'Version pour enfant' : 'Ten-year-old version') : (fr ? 'Version technique' : 'Technical version')}</h3>
             <p>{simple ? project.simple : project.technical}</p>
           </div>
           <div className="teaching-chips">
             {project.results.map((item) => <span className="result" key={item}>{item}</span>)}
             {project.technologies.map((item) => <span key={item}>{item}</span>)}
           </div>
-          <p className="teaching-kicker">Let’s talk</p>
+          <p className="teaching-kicker">{fr ? 'Parlons-en' : 'Let’s talk'}</p>
           <div className="teaching-links">
             <a href="https://github.com/AlaaBelga" target="_blank" rel="noopener">GitHub</a>
             <a href="https://www.linkedin.com/in/alaa-belga-164151382" target="_blank" rel="noopener">LinkedIn</a>

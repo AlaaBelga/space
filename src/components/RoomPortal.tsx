@@ -6,6 +6,7 @@ import { ProjectFloorPlan } from './ProjectFloorPlan'
 import { INSEAPlan } from './INSEAPlan'
 import { TeachingRooms } from './TeachingRooms'
 import { ProjectLinks } from './ProjectLinks'
+import { getCopy, type Language } from '../i18n'
 
 export interface RoomRect {
   left: number
@@ -18,9 +19,11 @@ interface RoomPortalProps {
   detail: RoomDetail | null
   roomRect: RoomRect | null
   onClose: () => void
+  language: Language
 }
 
-export function RoomPortal({ detail, roomRect, onClose }: RoomPortalProps) {
+export function RoomPortal({ detail, roomRect, onClose, language }: RoomPortalProps) {
+  const t = getCopy(language)
   const [isClosing, setIsClosing] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
   const portalFloorRef = useRef<HTMLDivElement>(null)
@@ -130,7 +133,7 @@ export function RoomPortal({ detail, roomRect, onClose }: RoomPortalProps) {
       }}
       role="dialog"
       aria-modal="true"
-      aria-label={`Inside Chamber ${detail.roomNumber}: ${detail.title}`}
+      aria-label={`${language === 'fr' ? 'Intérieur de la salle' : 'Inside Chamber'} ${detail.roomNumber}: ${detail.title}`}
     >
       {/* Dynamic Swoosh Speed Tunnel Streaks */}
       <div className={`swoosh-speed-tunnel ${isClosing ? 'closing' : ''}`} aria-hidden="true" />
@@ -142,7 +145,7 @@ export function RoomPortal({ detail, roomRect, onClose }: RoomPortalProps) {
       >
         {/* Slab Header */}
         <div className="slab portal-slab">
-          <span>LEVEL {detail.floorNumber}</span>
+          <span>{t.level} {detail.floorNumber}</span>
           <strong className="portal-title">
             {detail.logo && (
               <img className="portal-logo" src={detail.logo} alt="" aria-hidden="true" />
@@ -155,7 +158,7 @@ export function RoomPortal({ detail, roomRect, onClose }: RoomPortalProps) {
             type="button"
             aria-label="Exit room and return to tower"
           >
-            EXIT ROOM [ESC ✕]
+            {t.exitRoom}
           </button>
         </div>
 
@@ -163,9 +166,9 @@ export function RoomPortal({ detail, roomRect, onClose }: RoomPortalProps) {
         <div className="floor portal-floor" ref={portalFloorRef}>
           <aside
             className={`room-progress ${scrollProgress >= 0.99 ? 'complete' : ''}`}
-            aria-label={scrollProgress >= 0.99 ? 'Room fully viewed' : 'Scroll to see the rest of the room'}
+            aria-label={scrollProgress >= 0.99 ? t.roomSeen : t.scrollDown}
           >
-            <span className="room-progress-label">{scrollProgress >= 0.99 ? 'ROOM SEEN' : 'SCROLL DOWN'}</span>
+            <span className="room-progress-label">{scrollProgress >= 0.99 ? t.roomSeen : t.scrollDown}</span>
             <span className="room-progress-track">
               <span style={{ height: `${Math.max(8, scrollProgress * 100)}%` }} />
             </span>
@@ -183,17 +186,17 @@ export function RoomPortal({ detail, roomRect, onClose }: RoomPortalProps) {
 
           <div className="glass portal-glass">
             {detail.id === 'education-1' ? (
-              <INSEAPlan />
+              <INSEAPlan language={language} />
             ) : detail.id === 'teaching-0' || detail.id === 'teaching-1' ? (
-              <TeachingRooms roomId={detail.id} />
+              <TeachingRooms roomId={detail.id} language={language} />
             ) : detail.id === 'internships-1' ? (
-              <PatentPipelinePlan />
+              <PatentPipelinePlan language={language} />
             ) : ['awards-0', 'awards-1', 'projects-0', 'projects-1', 'internships-0'].includes(detail.id) ? (
-              <ProjectFloorPlan planId={detail.id} />
+              <ProjectFloorPlan planId={detail.id} language={language} />
             ) : (
-              <ChamberPlan detail={detail} onClose={handleClose} />
+              <ChamberPlan detail={detail} onClose={handleClose} language={language} />
             )}
-            <ProjectLinks detail={detail} />
+            <ProjectLinks detail={detail} language={language} />
           </div>
         </div>
 
@@ -201,7 +204,7 @@ export function RoomPortal({ detail, roomRect, onClose }: RoomPortalProps) {
         <div className="foundation portal-foundation">
           <span>ALAABELGA.SPACE // CHAMBER {detail.roomNumber}</span>
           <button className="portal-bottom-exit" onClick={handleClose} type="button">
-            RETURN TO ELEVATOR [ESC]
+          {t.returnElevator}
           </button>
         </div>
       </div>
